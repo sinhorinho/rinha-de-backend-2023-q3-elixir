@@ -5,12 +5,6 @@ WORKDIR /app
 ARG MIX_ENV=prod
 ENV MIX_ENV $MIX_ENV
 
-RUN apk upgrade
-
-RUN apk add --update build-base git nodejs npm
-
-RUN npm install -g sass
-
 COPY mix.exs mix.exs
 COPY mix.lock mix.lock
 
