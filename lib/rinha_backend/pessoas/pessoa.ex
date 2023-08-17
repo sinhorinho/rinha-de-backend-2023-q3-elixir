@@ -1,4 +1,7 @@
 defmodule RinhaBackend.Pessoas.Pessoa do
+  @moduledoc """
+  Modulo que representa o schema de Pessoa
+  """
   use Ecto.Schema
 
   import Ecto.Changeset
