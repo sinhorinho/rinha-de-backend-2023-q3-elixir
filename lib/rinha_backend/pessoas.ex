@@ -1,4 +1,7 @@
 defmodule RinhaBackend.Pessoas do
+  @moduledoc """
+  Contexto de pessoas, contem funcoes para criacao e manipulacao.
+  """
   import Ecto.Query
 
   alias RinhaBackend.{Pessoas.Pessoa, Repo}
