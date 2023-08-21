@@ -14,6 +14,7 @@ defmodule RinhaBackend.Application do
       RinhaBackend.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: RinhaBackend.PubSub},
+      RinhaBackend.Pessoas,
       # Start the Endpoint (http/https)
       RinhaBackendWeb.Endpoint
       # Start a worker by calling: RinhaBackend.Worker.start_link(arg)

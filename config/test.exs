@@ -25,3 +25,14 @@ config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :rinha_backend, RinhaBackend.Pessoas,
+  gc_interval: :timer.hours(12),
+  max_size: 1_000_000,
+  allocated_memory: 2_000_000_000,
+  gc_cleanup_min_timeout: :timer.seconds(10),
+  gc_cleanup_max_timeout: :timer.minutes(10),
+  conn_opts: [
+    host: "127.0.0.1",
+    port: 6379
+  ]
