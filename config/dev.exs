@@ -61,3 +61,9 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+config :rinha_backend, RinhaBackend.Pessoas,
+  conn_opts: [
+    host: "localhost",
+    port: 6379
+  ]

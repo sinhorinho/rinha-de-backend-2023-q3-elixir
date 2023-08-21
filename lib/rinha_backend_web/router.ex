@@ -9,5 +9,6 @@ defmodule RinhaBackendWeb.Router do
     pipe_through :api
 
     resources "/pessoas", PessoaController, only: [:create, :index, :show]
+    get "/contagem-pessoas", PessoaController, :show_count
   end
 end

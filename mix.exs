@@ -40,6 +40,9 @@ defmodule RinhaBackend.MixProject do
       {:telemetry_poller, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
+      {:nebulex, "~> 2.3.1"},
+      {:nebulex_redis_adapter, "~> 2.2"},
+      {:decorator, "~> 1.4"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
     ]
   end

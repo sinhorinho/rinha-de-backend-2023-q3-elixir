@@ -7,7 +7,7 @@ defmodule RinhaBackendWeb.PessoaController do
       {:ok, pessoa} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", ~p"/pessoas/#{pessoa.id}")
+        # |> put_resp_header("location", ~p"/pessoas/#{pessoa.id}")
         |> render(:show, pessoa: pessoa)
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -18,7 +18,7 @@ defmodule RinhaBackendWeb.PessoaController do
     end
   end
 
-  def show(conn, %{"id" => id}) do
+  def show(conn, %{"id" => <<_::256>> = id}) do
     case Pessoas.consultar(id) do
       nil ->
         conn
@@ -29,6 +29,19 @@ defmodule RinhaBackendWeb.PessoaController do
       pessoa ->
         render(conn, :show, pessoa: pessoa)
     end
+  end
+
+  def show(conn, %{"id" => _}) do
+    conn
+    |> put_status(:not_found)
+    |> put_view(json: RinhaBackendWeb.ErrorJSON)
+    |> render("404.json")
+  end
+
+  def show_count(conn, _params) do
+    contagem = Pessoas.contagem_pessoas()
+
+    text(conn, contagem)
   end
 
   def index(conn, %{"t" => termo}) do
