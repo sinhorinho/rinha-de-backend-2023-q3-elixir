@@ -1,62 +1,43 @@
-name: Elixir CI
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
 
 on:
+  # Runs on pushes targeting the default branch
   push:
-    branches:
-      - '*'         # matches every branch that doesn't contain a '/'
-      - '*/*'       # matches every branch containing a single '/'
-      - '**'        # matches every branch
-      - '!main'     # excludes main
+    branches: ["gh-pages"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
-  build:
-
-    name: Build and test
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    env:
-      DB_DATABASE: "rinhabackend_test"
-      DB_HOSTNAME: "127.0.0.1"
-      DB_PASSWORD: "postgres"
-      DB_POOL_SIZE: "10"
-      DB_PORT: "5432"
-      DB_USERNAME: "postgres"
-      MIX_ENV: "test"
-      SECRET_KEY_BASE: "tS9A8mRSFlXwQY7myvYwoSI4S+Q8S0img+CGPck7bP3kvn8FV78zzYXKnuDhh7cX"
-
-    services:
-      postgres:
-        image: postgres
-        env:
-          POSTGRES_PASSWORD: "postgres"
-          POSTGRES_USERNAME: "postgres"
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Elixir
-
-      uses: erlef/setup-elixir@v1
-      with:
-        elixir-version: '1.14.2' # Define the elixir version [required]
-        otp-version: '25.0.3' # Define the OTP version [required]
-    - name: Restore dependencies cache
-      uses: actions/cache@v2
-      with:
-        path: deps
-        key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
-        restore-keys: ${{ runner.os }}-mix-
-    - name: Install dependencies
-      run: mix deps.get
-    - name: Code Beauty
-      run: mix format --check-formatted
-    - name: Credo
-      run: mix credo --strict
-    - name: Run tests
-      run: mix test
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
