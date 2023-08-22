@@ -13,11 +13,11 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@db/rinha_backend_dev
       - SECRET_KEY_BASE=4kZGFFt1SKlRnExAsUKG7aSpJCo2bsyA5smXYNJfe0EbqufOEgTHrzeyzHLITZu0
       - PHX_SERVER=true
-      - 'POOL_SIZE=40'
+      - 'POOL_SIZE=200'
     deploy:
       resources:
         limits:
-          cpus: '0.25'
+          cpus: '0.4'
           memory: '0.5GB'
     networks:
       - rinha-backend
@@ -34,11 +34,11 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@db/rinha_backend_dev
       - SECRET_KEY_BASE=4kZGFFt1SKlRnExAsUKG7aSpJCo2bsyA5smXYNJfe0EbqufOEgTHrzeyzHLITZu0
       - PHX_SERVER=true
-      - 'POOL_SIZE=40'
+      - 'POOL_SIZE=200'
     deploy:
       resources:
         limits:
-          cpus: '0.25'
+          cpus: '0.4'
           memory: '0.5GB'
     networks:
       - rinha-backend
@@ -63,7 +63,7 @@ services:
   db:
     image: postgres:latest
     hostname: db
-    command: '-c synchronous_commit=false -c shared_buffers=256MB -c max_connections=100'
+    command: '-c synchronous_commit=false -c shared_buffers=256MB -c max_connections=500'
     environment:
       - 'POSTGRES_DB=rinha_backend_dev'
       - 'POSTGRES_USER=postgres'

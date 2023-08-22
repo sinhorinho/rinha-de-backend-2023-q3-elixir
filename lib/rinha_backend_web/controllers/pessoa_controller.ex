@@ -18,7 +18,7 @@ defmodule RinhaBackendWeb.PessoaController do
     end
   end
 
-  def show(conn, %{"id" => <<_::256>> = id}) do
+  def show(conn, %{"id" => id}) do
     case Pessoas.consultar(id) do
       nil ->
         conn
@@ -29,13 +29,6 @@ defmodule RinhaBackendWeb.PessoaController do
       pessoa ->
         render(conn, :show, pessoa: pessoa)
     end
-  end
-
-  def show(conn, %{"id" => _}) do
-    conn
-    |> put_status(:not_found)
-    |> put_view(json: RinhaBackendWeb.ErrorJSON)
-    |> render("404.json")
   end
 
   def show_count(conn, _params) do
