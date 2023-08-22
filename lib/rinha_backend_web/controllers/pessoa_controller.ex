@@ -7,7 +7,7 @@ defmodule RinhaBackendWeb.PessoaController do
       {:ok, pessoa} ->
         conn
         |> put_status(:created)
-        # |> put_resp_header("location", ~p"/pessoas/#{pessoa.id}")
+        |> put_resp_header("location", ~p"/pessoas/#{pessoa.id}")
         |> render(:show, pessoa: pessoa)
 
       {:error, %Ecto.Changeset{} = changeset} ->
