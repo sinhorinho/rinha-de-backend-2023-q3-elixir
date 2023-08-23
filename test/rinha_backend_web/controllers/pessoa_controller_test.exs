@@ -29,7 +29,7 @@ defmodule RinhaBackendWeb.PessoaControllerTest do
       assert resp.status == 422
     end
 
-    test "with invalid stack should return 422", %{conn: conn} do
+    test "with invalid stack should return 400", %{conn: conn} do
       params = %{
         nome: "John Doe",
         apelido: "doe",
@@ -39,7 +39,32 @@ defmodule RinhaBackendWeb.PessoaControllerTest do
 
       resp = post(conn, "/pessoas", params)
 
+      assert resp.status == 400
+    end
+
+    test "with some item in stack for greater than 32 it should return 422", %{conn: conn} do
+      params = %{
+        nome: "John Doe",
+        apelido: "doe",
+        nascimento: ~D[2001-01-01],
+        stack: ["C#", "Ruby", String.duplicate("a", 33)]
+      }
+
+      resp = post(conn, "/pessoas", params)
+
       assert resp.status == 422
+    end
+
+    test "cast errors should return 400", %{conn: conn} do
+      params = %{
+        nome: 2,
+        apelido: "doe",
+        nascimento: ~D[2001-01-01]
+      }
+
+      resp = post(conn, "/pessoas", params)
+
+      assert resp.status == 400
     end
   end
 

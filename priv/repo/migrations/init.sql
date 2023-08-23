@@ -30,6 +30,21 @@ CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
 COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
+--
+-- Name: calculate_busca_trgm(text, text, text[]); Type: FUNCTION; Schema: public; Owner: postgres
+--
+
+CREATE FUNCTION public.calculate_busca_trgm(nome text, apelido text, stack text[]) RETURNS text
+    LANGUAGE plpgsql IMMUTABLE
+    AS $$
+BEGIN
+    RETURN lower(nome) || lower(apelido) || COALESCE(array_to_string(stack, ''), '');
+END;
+$$;
+
+
+ALTER FUNCTION public.calculate_busca_trgm(nome text, apelido text, stack text[]) OWNER TO postgres;
+
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -44,9 +59,7 @@ CREATE TABLE public.pessoas (
     nome character varying(255) NOT NULL,
     nascimento date NOT NULL,
     stack character varying[],
-    inserted_at timestamp(0) without time zone NOT NULL,
-    updated_at timestamp(0) without time zone NOT NULL,
-    busca_trgm text GENERATED ALWAYS AS ((lower((nome)::text) || lower((apelido)::text))) STORED
+    busca_trgm text GENERATED ALWAYS AS (public.calculate_busca_trgm((nome)::text, (apelido)::text, (stack)::text[])) STORED
 );
 
 
@@ -68,11 +81,18 @@ ALTER TABLE public.schema_migrations OWNER TO postgres;
 -- Data for Name: pessoas; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+COPY public.pessoas (id, apelido, nome, nascimento, stack) FROM stdin;
+\.
+
+
 --
 -- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20230816171253);
+COPY public.schema_migrations (version) FROM stdin;
+20230816171253
+\.
+
 
 --
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres

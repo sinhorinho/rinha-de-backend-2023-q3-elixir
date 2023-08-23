@@ -11,8 +11,15 @@ defmodule RinhaBackendWeb.PessoaController do
         |> render(:show, pessoa: pessoa)
 
       {:error, %Ecto.Changeset{} = changeset} ->
+        error_status_code =
+          if cast_errors?(changeset) do
+            :bad_request
+          else
+            :unprocessable_entity
+          end
+
         conn
-        |> put_status(:unprocessable_entity)
+        |> put_status(error_status_code)
         |> put_view(json: RinhaBackendWeb.ErrorJSON)
         |> render("changeset.json", changeset: changeset)
     end
@@ -48,5 +55,16 @@ defmodule RinhaBackendWeb.PessoaController do
     |> put_status(:bad_request)
     |> put_view(json: RinhaBackendWeb.ErrorJSON)
     |> render("400.json")
+  end
+
+  defp cast_errors?(%Ecto.Changeset{} = changeset) do
+    Enum.any?(changeset.errors, fn {_key, descr} ->
+      error_type =
+        descr
+        |> elem(1)
+        |> Keyword.get(:validation)
+
+      error_type == :cast
+    end)
   end
 end

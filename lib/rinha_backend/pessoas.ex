@@ -39,7 +39,7 @@ defmodule RinhaBackend.Pessoas do
   def listar(termo) do
     query =
       from(p in Pessoa,
-        where: ilike(p.busca_trgm, ^"%#{termo}%") or ^termo in p.stack,
+        where: ilike(p.busca_trgm, ^"%#{termo}%"),
         limit: 50
       )
 

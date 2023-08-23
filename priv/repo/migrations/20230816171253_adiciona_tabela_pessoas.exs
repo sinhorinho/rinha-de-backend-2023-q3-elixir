@@ -3,15 +3,21 @@ defmodule RinhaBackend.Repo.Migrations.AdicionaTabelaPessoas do
 
   def up do
     execute """
+        CREATE OR REPLACE FUNCTION public.calculate_busca_trgm(nome text, apelido text, stack text[]) RETURNS text AS $$
+        BEGIN
+          RETURN lower(nome) || lower(apelido) || COALESCE(array_to_string(stack, ''), '');
+        END;
+        $$ LANGUAGE plpgsql IMMUTABLE;
+    """
+
+    execute """
     CREATE TABLE public.pessoas (
       id uuid NOT NULL,
       apelido varchar(255) NOT NULL,
       nome varchar(255) NOT NULL,
       nascimento date NOT NULL,
       stack _varchar NULL,
-      inserted_at timestamp(0) NOT NULL,
-      updated_at timestamp(0) NOT NULL,
-      busca_trgm text NULL GENERATED ALWAYS AS (lower(nome::text) || lower(apelido::text)) STORED
+      busca_trgm text GENERATED ALWAYS AS (public.calculate_busca_trgm(nome, apelido, stack)) STORED
     );
     """
 
@@ -20,7 +26,7 @@ defmodule RinhaBackend.Repo.Migrations.AdicionaTabelaPessoas do
     """
 
     execute """
-    CREATE INDEX IF NOT EXISTS IDX_PESSOAS_BUSCA_TGRM ON pessoas USING GIST (BUSCA_TRGM GIST_TRGM_OPS);
+    CREATE INDEX IF NOT EXISTS IDX_PESSOAS_BUSCA_TGRM ON public.pessoas USING GIST (BUSCA_TRGM public.GIST_TRGM_OPS);
     """
 
     create unique_index(:pessoas, [:apelido])
