@@ -2,8 +2,7 @@ version: '3.5'
 
 services:
   api1:
-    build:
-      context: .
+    image: sinhorinho/rinha-de-backend-2023-q3-elixir:latest
     hostname: api1
     depends_on:
       - db
@@ -13,18 +12,17 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@db/rinha_backend_dev
       - SECRET_KEY_BASE=4kZGFFt1SKlRnExAsUKG7aSpJCo2bsyA5smXYNJfe0EbqufOEgTHrzeyzHLITZu0
       - PHX_SERVER=true
-      - 'POOL_SIZE=200'
+      - 'POOL_SIZE=230'
     deploy:
       resources:
         limits:
-          cpus: '0.4'
+          cpus: '0.35'
           memory: '0.5GB'
     networks:
       - rinha-backend
 
   api2:
-    build:
-      context: .
+    image: sinhorinho/rinha-de-backend-2023-q3-elixir:latest
     hostname: api2
     depends_on:
       - db
@@ -34,11 +32,11 @@ services:
       - DATABASE_URL=postgres://postgres:postgres@db/rinha_backend_dev
       - SECRET_KEY_BASE=4kZGFFt1SKlRnExAsUKG7aSpJCo2bsyA5smXYNJfe0EbqufOEgTHrzeyzHLITZu0
       - PHX_SERVER=true
-      - 'POOL_SIZE=200'
+      - 'POOL_SIZE=230'
     deploy:
       resources:
         limits:
-          cpus: '0.4'
+          cpus: '0.35'
           memory: '0.5GB'
     networks:
       - rinha-backend
@@ -76,8 +74,8 @@ services:
     deploy:
        resources:
          limits:
-           cpus: '0.8'
-           memory: '1.5GB'
+           cpus: '0.7'
+           memory: '1.3GB'
     networks:
       - rinha-backend
     
